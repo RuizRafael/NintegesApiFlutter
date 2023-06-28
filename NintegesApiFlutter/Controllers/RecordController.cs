@@ -44,10 +44,43 @@ namespace NintegesApiFlutter.Controllers
         }
 
 
+
+
         [HttpPost]
         [Route("[action]")]
         public JsonResult InsertRecord(string type,int userId,int workplaceId,int isSameLocation, string note)
         {
+            //string query = @"insert into record (type,userId,workplaceId,isSameLocation,note) values (@type,@userId,@workplaceId,@isSameLocation,@note";
+            string query = $"insert into record (type,userId,workplaceId,isSameLocation,note) values ('{record.type}','{record.userId}','{record.workplaceId}','{record.isSameLocation}','{record.note}')";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = configuration.GetConnectionString("sqlCon");
+            MySqlDataReader reader;
+            using (MySqlConnection conection = new MySqlConnection(sqlDataSource))
+            {
+                conection.Open();
+                using (MySqlCommand command = new MySqlCommand(query, conection))
+                {
+                    //command.Parameters.AddWithValue("@type", record.type);
+                    //command.Parameters.AddWithValue("@userId", record.userId);
+                    //command.Parameters.AddWithValue("@workplaceId", record.workplaceId);
+                    //command.Parameters.AddWithValue("@isSameLocation", record.isSameLocation);
+                    //command.Parameters.AddWithValue("@note", record.note);
+                    reader = command.ExecuteReader();
+                    table.Load(reader);
+
+                    reader.Close();
+                    conection.Close();
+                }
+            }
+            return new JsonResult("Added successfully");
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public JsonResult InsertRecordParams(int type,int userId,int workplaceId,int isSameLocation, string note)
+        {
+            //string query = @"insert into record (type,userId,workplaceId,isSameLocation,note) values (@type,@userId,@workplaceId,@isSameLocation,@note";
             string query = $"insert into record (type,userId,workplaceId,isSameLocation,note) values ('{type}','{userId}','{workplaceId}','{isSameLocation}','{note}')";
 
             DataTable table = new DataTable();
@@ -67,6 +100,7 @@ namespace NintegesApiFlutter.Controllers
             }
             return new JsonResult("Added successfully");
         }
+
 
 
     }
