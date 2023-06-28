@@ -46,10 +46,9 @@ namespace NintegesApiFlutter.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public JsonResult InsertRecord(Record record)
+        public JsonResult InsertRecord(string type,int userId,int workplaceId,int isSameLocation, string note)
         {
-            //string query = @"insert into record (type,userId,workplaceId,isSameLocation,note) values (@type,@userId,@workplaceId,@isSameLocation,@note";
-            string query = @"insert into record (type,userId,workplaceId,isSameLocation,note) values (1,2,2,1,'porque se me ha olvidado')";
+            string query = $"insert into record (type,userId,workplaceId,isSameLocation,note) values ('{type}','{userId}','{workplaceId}','{isSameLocation}','{note}')";
 
             DataTable table = new DataTable();
             string sqlDataSource = configuration.GetConnectionString("sqlCon");
@@ -59,11 +58,6 @@ namespace NintegesApiFlutter.Controllers
                 conection.Open();
                 using (MySqlCommand command = new MySqlCommand(query, conection))
                 {
-                    //command.Parameters.AddWithValue("@type", record.type);
-                    //command.Parameters.AddWithValue("@userId", record.userId);
-                    //command.Parameters.AddWithValue("@workplaceId", record.workplaceId);
-                    //command.Parameters.AddWithValue("@isSameLocation", record.isSameLocation);
-                    //command.Parameters.AddWithValue("@note", record.note);
                     reader = command.ExecuteReader();
                     table.Load(reader);
 
