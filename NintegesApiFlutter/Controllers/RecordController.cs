@@ -21,7 +21,7 @@ namespace NintegesApiFlutter.Controllers
         {
             configuration = _configuration;
         }
-        [HttpGet]
+        [HttpPost]
         [Route("[action]")]
         public JsonResult AllRecords(){
             string query = @"select * from record";
@@ -77,6 +77,8 @@ namespace NintegesApiFlutter.Controllers
         }
 
     
+
+
 
     }
 }

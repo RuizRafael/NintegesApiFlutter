@@ -21,7 +21,7 @@ namespace NintegesApiFlutter.Controllers
             configuration = _configuration;
         }
         
-        [HttpGet]
+        [HttpPost]
         [Route("[action]")]
         public JsonResult AllUsers()
         {
@@ -44,7 +44,7 @@ namespace NintegesApiFlutter.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("[action]/{id}")]
         public JsonResult UserById(int id)
         {
@@ -95,6 +95,33 @@ namespace NintegesApiFlutter.Controllers
             }
             return new JsonResult(table);
         }
+
+        [HttpPost]
+        [Route("[action]")]
+        public JsonResult InsertUser(string nif, string fullName, string name, string token, int access, string password)
+        {
+            //string query = @"insert into record (type,userId,workplaceId,isSameLocation,note) values (@type,@userId,@workplaceId,@isSameLocation,@note";
+            string query = $"INSERT INTO `nineteges`.`user`(`nif`,`fullName`,`name`,`workplaces`,`token`,`access`,`password`)VALUES('{nif}','{fullName}','{name}',null,'{token}','{access}','{password}')";
+            DataTable table = new DataTable();
+            string sqlDataSource = configuration.GetConnectionString("sqlCon");
+            MySqlDataReader reader;
+            using (MySqlConnection conection = new MySqlConnection(sqlDataSource))
+            {
+                conection.Open();
+                using (MySqlCommand command = new MySqlCommand(query, conection))
+                {
+                    reader = command.ExecuteReader();
+                    table.Load(reader);
+
+                    reader.Close();
+                    conection.Close();
+                }
+            }
+            return new JsonResult("Added successfully");
+        }
+
+
+
 
 
     }
